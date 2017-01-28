@@ -9,8 +9,13 @@ try {
     $telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
     $commands_folder = __DIR__ . '/app/Commands/';
     $telegram->addCommandsPath($commands_folder);
+
+    Longman\TelegramBot\TelegramLog::initialize();
+    Longman\TelegramBot\TelegramLog::initErrorLog(__DIR__ . '/' . $BOT_NAME . '_error.log');
+    Longman\TelegramBot\TelegramLog::initDebugLog(__DIR__ . '/' . $BOT_NAME . '_debug.log');
+    Longman\TelegramBot\TelegramLog::initUpdateLog(__DIR__ . '/' . $BOT_NAME . '_update.log');
     // Handle telegram webhook request
     $telegram->handle();
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
-    file_put_contents(__DIR__ . '/log.txt', date('Y-m-d H:i:s'). ' - '. print_r($e), FILE_APPEND);
+    Longman\TelegramBot\TelegramLog::initErrorLog(__DIR__ . '/' . $BOT_NAME . '_error.log');
 }
