@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="c59b5b26-14e0-413d-9a70-cd5579df64d6" name="sfedorov.tk" url="http://sfedorov.tk">
+        <fileTransfer host="sfedorov.tk" port="2222" rootFolder="/home/f/fedorbkru/" accessType="SFTP" password="df92df9ddf98dfcedf9ddf93dfccdfcb" username="fedorbkru">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="2222" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
