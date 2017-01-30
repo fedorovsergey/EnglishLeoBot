@@ -2,6 +2,7 @@
 
 namespace Lingualeo;
 
+use function GuzzleHttp\json_decode;
 use Longman\TelegramBot\TelegramLog;
 
 class Handler {
@@ -35,12 +36,22 @@ class Handler {
         curl_setopt($curl, CURLOPT_POST, false);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_URL, $train);
-        curl_setopt($curl, CURLOPT_COOKIEJAR, ROOT  . "/cookie/$login.txt");
+        curl_setopt($curl, CURLOPT_COOKIEFILE, ROOT  . "/cookie/$login.txt");
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
         $result = curl_exec($curl);
-
-        TelegramLog::debug('Lingualeo train answer' . $result);
         curl_close($curl);
+        TelegramLog::debug('Lingualeo train answer' . $result);
+        $gameDataArray = json_decode($result, 1);
 
+        if(!empty($gameDataArray['error_msg'])) {
+            //TODO lingualeoAnswer
+            TelegramLog::error('Lingualeo error' . $gameDataArray['error_msg']);
+            return ['error_msg'=>$gameDataArray['error_msg']];
+        }
+        $gameDataArray = $gameDataArray['game'];
+        foreach($gameDataArray as $question) {
+            $questionWord = $question['text'];
+            return ['error_msg'=> null, 'text'=> "$questionWord"];
+        }
     }
 }

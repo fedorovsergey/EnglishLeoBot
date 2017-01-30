@@ -25,11 +25,6 @@ class StartTrainCommand extends UserCommand
     /**
      * @var string
      */
-    protected $usage = '/echo <text>';
-
-    /**
-     * @var string
-     */
     protected $version = '1.1.0';
 
     /**
@@ -42,18 +37,20 @@ class StartTrainCommand extends UserCommand
     {
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
-        $text    = trim($message->getText(true));
-
-        if ($text === '') {
-            $text = 'Command usage: ' . $this->getUsage();
-        }
 
         TelegramLog::debug('Lingualeo startTrain command start');
         $lingualeoHandler = new Handler();
-        $lingualeoHandler->startTrain();
+        $answer = $lingualeoHandler->startTrain();
+        if(!empty($answer['error_msg'])) {
+            $data = [
+                'chat_id' => $chat_id,
+                'text'    => $answer['error_msg'],
+            ];
+            return Request::sendMessage($data);
+        }
         $data = [
             'chat_id' => $chat_id,
-            'text'    => $text,
+            'text'    => $answer['text'],
         ];
 
         return Request::sendMessage($data);
