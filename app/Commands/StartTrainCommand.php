@@ -4,6 +4,7 @@ namespace Longman\TelegramBot\Commands\UserCommands;
 
 use Lingualeo\Handler;
 use Longman\TelegramBot\Commands\UserCommand;
+use Longman\TelegramBot\DB;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\TelegramLog;
 
@@ -41,6 +42,9 @@ class StartTrainCommand extends UserCommand
         TelegramLog::debug('Lingualeo startTrain command start');
         $lingualeoHandler = new Handler();
         $answer = $lingualeoHandler->startTrain();
+
+        //example
+        //$res = DB::getPdo()->query('SELECT * FROM test')->fetch(PDO::FETCH_ASSOC);
         if(!empty($answer['error_msg'])) {
             $data = [
                 'chat_id' => $chat_id,

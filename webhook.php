@@ -13,15 +13,22 @@ $BOT_NAME = 'EnglishLeobot';
 try {
     // Create Telegram API object
     $telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
-    $commands_folder = __DIR__ . '/app/Commands/';
+    
+    //Включаем логирование 
+    Longman\TelegramBot\TelegramLog::initialize();
+    Longman\TelegramBot\TelegramLog::initErrorLog(ROOT . $BOT_NAME . '_error.log');
+    Longman\TelegramBot\TelegramLog::initDebugLog(ROOT . $BOT_NAME . '_debug.log');
+    Longman\TelegramBot\TelegramLog::initUpdateLog(ROOT . $BOT_NAME . '_update.log');
+    
+    //подключаем свои команды
+    $commands_folder = CLASS_ROOT . 'Commands/';
     $telegram->addCommandsPath($commands_folder);
 
-    Longman\TelegramBot\TelegramLog::initialize();
-    Longman\TelegramBot\TelegramLog::initErrorLog(__DIR__ . '/' . $BOT_NAME . '_error.log');
-    Longman\TelegramBot\TelegramLog::initDebugLog(__DIR__ . '/' . $BOT_NAME . '_debug.log');
-    Longman\TelegramBot\TelegramLog::initUpdateLog(__DIR__ . '/' . $BOT_NAME . '_update.log');
+    //включаем базу данных
+    $telegram->enableMySQL(require CLASS_ROOT . 'config/database.php');
+
     // Handle telegram webhook request
     $telegram->handle();
 } catch (Longman\TelegramBot\Exception\TelegramException $e) {
-    Longman\TelegramBot\TelegramLog::initErrorLog(__DIR__ . '/' . $BOT_NAME . '_error.log');
+    Longman\TelegramBot\TelegramLog::initErrorLog(ROOT . $BOT_NAME . '_error.log');
 }
