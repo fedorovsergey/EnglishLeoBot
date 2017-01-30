@@ -1,6 +1,12 @@
 <?php
 // Load composer
 require __DIR__ . '/vendor/autoload.php';
+define('ROOT', __DIR__ . '/');
+define('CLASS_ROOT', ROOT . 'app/');
+
+spl_autoload_register(function ($class_name) {
+    include CLASS_ROOT.str_replace('\\', DIRECTORY_SEPARATOR, $class_name) . '.php';
+});
 
 $API_KEY = '306141394:AAGbmIBKOFxkFFGb9mTT11iNWKZCVOHPahM';
 $BOT_NAME = 'EnglishLeobot';

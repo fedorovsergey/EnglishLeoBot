@@ -2,8 +2,10 @@
 
 namespace Longman\TelegramBot\Commands\UserCommands;
 
+use Lingualeo\Handler;
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Request;
+use Longman\TelegramBot\TelegramLog;
 
 /**
  * User "/echo" command
@@ -46,6 +48,9 @@ class StartTrainCommand extends UserCommand
             $text = 'Command usage: ' . $this->getUsage();
         }
 
+        TelegramLog::debug('Lingualeo startTrain command start');
+        $lingualeoHandler = new Handler();
+        $lingualeoHandler->startTrain();
         $data = [
             'chat_id' => $chat_id,
             'text'    => $text,
