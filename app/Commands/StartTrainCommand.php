@@ -2,7 +2,6 @@
 
 namespace Longman\TelegramBot\Commands\UserCommands;
 
-use Lingualeo\Handler;
 use Longman\TelegramBot\Commands\UserCommand;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\TelegramLog;
@@ -43,8 +42,17 @@ class StartTrainCommand extends UserCommand
         $user = User::getByChatId($chat_id);
         TelegramLog::debug('Lingualeo login '.$user->getLogin());
 
-        $lingualeoHandler = new Handler();
-        $answer = $lingualeoHandler->startTrain();
+        try {
+            $answer = $user->startTraining();
+        } catch (\Lingualeo\Exception $e) {
+            TelegramLog::debug($e->getMessage());
+            return Request::sendMessage(
+                [
+                    'chat_id' => $chat_id,
+                    'text' => 'Îøèáêà Lingualeo: '.$e->getMessage(),
+                ]
+            );
+        }
 
         if(!empty($answer['error_msg'])) {
             $data = [

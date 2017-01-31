@@ -5,6 +5,7 @@ namespace Models;
 
 use Longman\TelegramBot\DB;
 use PDO;
+use Lingualeo\Handler;
 
 class User extends AbstractModel
 {
@@ -47,5 +48,17 @@ class User extends AbstractModel
     public function getId()
     {
         return $this->id;
+    }
+    
+    public function startTraining() 
+    {
+        $lingualeoHandler = new Handler();
+        $answer = $lingualeoHandler->startTrain($this);
+        return $answer;
+    }
+
+    public function getCookiePath()
+    {
+        return ROOT  . "/cookie/{$this->getId()}.txt";
     }
 }
