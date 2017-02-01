@@ -27,10 +27,38 @@ class Handler {
         curl_close($curl);
     }
 
-    public function startTrain(User $user)
+    public function getNewTraining(User $user)
     {
-        $this->login($user);
+        $i=0;
+        $getTrainingAnswer = [];
+        do {
+            TelegramLog::debug('getTrainingAnswer try '.$i);
+            if(!empty($getTrainingAnswer['error_msg']) && $getTrainingAnswer['error_msg'] == 'Authorization required') {
+                TelegramLog::debug('getTrainingAnswer try login'.$i);
+                $this->login($user);
+            }
+            $getTrainingAnswer = $this->doGetTrainingRequest($user);
+            if(!empty($getTrainingAnswer) && empty($getTrainingAnswer['error_msg'])) {
+                break;
+            }
+        } while ($i<3);
 
+        if(empty($getTrainingAnswer)) {
+            throw new Exception('Lingualeo answer is empty');
+        }
+        if(!empty($getTrainingAnswer['error_msg'])) {
+            //TODO lingualeoAnswer
+            TelegramLog::error('Lingualeo error' . $getTrainingAnswer['error_msg']);
+            return ['error_msg' => $getTrainingAnswer['error_msg']];
+        }
+        $getTrainingAnswer = $getTrainingAnswer['game'];
+        foreach($getTrainingAnswer as $question) {
+            $questionWord = $question['text'];
+            return ['error_msg'=> null, 'text'=> "$questionWord"];
+        }
+    }
+
+    private function doGetTrainingRequest(User $user) {
         $train = 'https://lingualeo.com/training/gettraining/translate_word';
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_POST, false);
@@ -40,18 +68,12 @@ class Handler {
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
         $result = curl_exec($curl);
         curl_close($curl);
-        TelegramLog::debug('Lingualeo train answer' . $result);
-        $gameDataArray = json_decode($result, 1);
 
-        if(!empty($gameDataArray['error_msg'])) {
-            //TODO lingualeoAnswer
-            TelegramLog::error('Lingualeo error' . $gameDataArray['error_msg']);
-            return ['error_msg'=>$gameDataArray['error_msg']];
+        if(strpos($result, 'r_password')!== false) {
+            TelegramLog::debug('Lingualeo Authorization required');
+            return ['error_msg' => 'Authorization required'];
         }
-        $gameDataArray = $gameDataArray['game'];
-        foreach($gameDataArray as $question) {
-            $questionWord = $question['text'];
-            return ['error_msg'=> null, 'text'=> "$questionWord"];
-        }
+
+        return json_decode($result, 1);
     }
 }

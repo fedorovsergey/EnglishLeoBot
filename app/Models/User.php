@@ -33,6 +33,10 @@ class User extends AbstractModel
     protected $password;
     protected $chat_id;
 
+    /**
+     * @param $chatId
+     * @return User
+     */
     public static function getByChatId($chatId)
     {
         $table = static::TABLE;
@@ -50,15 +54,30 @@ class User extends AbstractModel
         return $this->id;
     }
     
-    public function startTraining() 
+    private function getNewTraining()
     {
         $lingualeoHandler = new Handler();
-        $answer = $lingualeoHandler->startTrain($this);
+        $answer = $lingualeoHandler->getNewTraining($this);
         return $answer;
     }
 
     public function getCookiePath()
     {
         return ROOT  . "/cookie/{$this->getId()}.txt";
+    }
+
+    public function getNextQuestion()
+    {
+        $activeTraining = $this->getActiveTraining();
+        if(null === $activeTraining) {
+            $activeTraining = $this->getNewTraining();
+        }
+        //todo возвращать объект, а не массив с текстом
+        return $activeTraining;
+    }
+
+    private function getActiveTraining()
+    {
+        return Training::getActiveByUserId($this->getId());
     }
 }

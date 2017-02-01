@@ -43,7 +43,7 @@ class StartTrainCommand extends UserCommand
         TelegramLog::debug('Lingualeo login '.$user->getLogin());
 
         try {
-            $answer = $user->startTraining();
+            $question = $user->getNextQuestion();
         } catch (\Lingualeo\Exception $e) {
             TelegramLog::debug($e->getMessage());
             return Request::sendMessage(
@@ -54,16 +54,23 @@ class StartTrainCommand extends UserCommand
             );
         }
 
-        if(!empty($answer['error_msg'])) {
+        if(!$question) {
             $data = [
                 'chat_id' => $chat_id,
-                'text'    => $answer['error_msg'],
+                'text'    => 'Internal Server Error',
+            ];
+            return Request::sendMessage($data);
+        }
+        if(!empty($question['error_msg'])) {
+            $data = [
+                'chat_id' => $chat_id,
+                'text'    => $question['error_msg'],
             ];
             return Request::sendMessage($data);
         }
         $data = [
             'chat_id' => $chat_id,
-            'text'    => $answer['text'],
+            'text'    => $question['text'],
         ];
 
         return Request::sendMessage($data);
