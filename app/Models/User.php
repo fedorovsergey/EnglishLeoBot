@@ -78,6 +78,6 @@ class User extends AbstractModel
 
     private function getActiveTraining()
     {
-        return Training::getActiveByUserId($this->getId());
+        return Training::getActiveByUserId($this);
     }
 }
