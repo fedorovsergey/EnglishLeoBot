@@ -3,6 +3,7 @@
 namespace Models;
 
 
+use Lingualeo\Exception;
 use Lingualeo\Handler;
 use Longman\TelegramBot\DB;
 use PDO;
@@ -94,6 +95,18 @@ class Training extends AbstractModel
             'status'=>$this->status,
         ]);
 
+        if(empty($rawData['game'])) {
+            throw new Exception('Empty game data');
+        }
+        foreach($rawData['game'] as $questionId => $questionData) {
+            $question = new Question();
+            $question->save([
+                'training_id'=>$this->id,
+                'text'=>$questionData['text'],
+                'status'=>$question->getStatus(),
+                'lingualeo_id'=>$questionData['id'],
+            ]);
+        }
         //TODO сохранение вопросов и ответов
     }
 }
