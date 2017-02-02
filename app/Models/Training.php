@@ -100,13 +100,8 @@ class Training extends AbstractModel
         }
         foreach($rawData['game'] as $questionId => $questionData) {
             $question = new Question();
-            $question->save([
-                'training_id'=>$this->id,
-                'text'=>$questionData['text'],
-                'status'=>$question->getStatus(),
-                'lingualeo_id'=>$questionData['id'],
-            ]);
+            $question->setTrainingId($this->id);
+            $question->storeToDb($questionData);
         }
-        //TODO сохранение вопросов и ответов
     }
 }
