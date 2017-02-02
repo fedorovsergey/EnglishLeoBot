@@ -51,11 +51,7 @@ class Handler {
             TelegramLog::error('Lingualeo error' . $getTrainingAnswer['error_msg']);
             return ['error_msg' => $getTrainingAnswer['error_msg']];
         }
-        $getTrainingAnswer = $getTrainingAnswer['game'];
-        foreach($getTrainingAnswer as $question) {
-            $questionWord = $question['text'];
-            return ['error_msg'=> null, 'text'=> "$questionWord"];
-        }
+        return $getTrainingAnswer;
     }
 
     private function doGetTrainingRequest(User $user) {

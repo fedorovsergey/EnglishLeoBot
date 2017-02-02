@@ -34,4 +34,34 @@ class AbstractModel
 
         return $this;
     }
+
+    public function save(array $fields)
+    {
+        if (empty($fields[self::PRIMARY_KEY]) ? $this->insert($fields) : $this->update($fields)) {
+            return $this;
+        } else {
+            throw new \Exception('Не удалось сохранить объект '.static::class);
+        }
+    }
+
+    private function insert($fields)
+    {
+        $tableName = static::TABLE;
+        $fieldNames = implode(', ', array_keys($fields));
+        $fieldPlaceholders = implode(', ', array_map(function($v){return ':'.$v;}, array_keys($fields)));
+        $sql = "INSERT INTO $tableName ($fieldNames) VALUES ($fieldPlaceholders)";
+        $stmt = Db::getPdo()->prepare($sql);
+        $stmt->execute($fields);
+        $this->setId((int)Db::getPdo()->lastInsertId());
+        return true;
+    }
+    private function update($fields)
+    {
+        return $this;
+    }
+
+    private function setId($param)
+    {
+        $this->{self::PRIMARY_KEY} = $param;
+    }
 }

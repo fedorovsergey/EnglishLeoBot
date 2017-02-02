@@ -17,6 +17,12 @@ class Training extends AbstractModel
     protected $type;
     protected $status;
 
+    public function __construct()
+    {
+        $this->type = 0;
+        $this->status = static::STATUS_ACTIVE;
+    }
+
     /**
      * @param User $user
      * @return Training|null
@@ -55,17 +61,39 @@ class Training extends AbstractModel
     /**
      * Запрашивает новую тренировку из lingualeo
      * @param User $user
-     * @return array
+     * @return Training
      */
     private static function getNewFromLingualeo(User $user)
     {
         $rawData = static::getRawTrainingDataFromLingualeo($user);
 
-        return $rawData;
+        $trainingObject = new static;
+        $trainingObject->user_id = $user->getId();
+        $trainingObject->storeToDb($rawData);
+
+        //заглушка чтобы работала отправка слова
+        $rawData = $rawData['game'];
+        foreach($rawData as $question) {
+            $questionWord = $question['text'];
+            return ['error_msg'=> null, 'text'=> "$questionWord"];
+        }
+        //end
+        return $trainingObject;
     }
 
     private static function getRawTrainingDataFromLingualeo(User $user)
     {
         return (new Handler())->getNewTraining($user);
+    }
+
+    private function storeToDb($rawData)
+    {
+        $this->save([
+            'user_id'=>$this->user_id,
+            'type'=>$this->type,
+            'status'=>$this->status,
+        ]);
+
+        //TODO сохранение вопросов и ответов
     }
 }
