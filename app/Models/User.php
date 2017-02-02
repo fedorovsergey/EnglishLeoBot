@@ -5,7 +5,6 @@ namespace Models;
 
 use Longman\TelegramBot\DB;
 use PDO;
-use Lingualeo\Handler;
 
 class User extends AbstractModel
 {
@@ -53,13 +52,6 @@ class User extends AbstractModel
     {
         return $this->id;
     }
-    
-    private function getNewTraining()
-    {
-        $lingualeoHandler = new Handler();
-        $answer = $lingualeoHandler->getNewTraining($this);
-        return $answer;
-    }
 
     public function getCookiePath()
     {
@@ -69,10 +61,6 @@ class User extends AbstractModel
     public function getNextQuestion()
     {
         $activeTraining = $this->getActiveTraining();
-        if(null === $activeTraining) {
-            $activeTraining = $this->getNewTraining();
-        }
-        //todo возвращать объект, а не массив с текстом
         return $activeTraining;
     }
 
