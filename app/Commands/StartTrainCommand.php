@@ -45,7 +45,7 @@ class StartTrainCommand extends UserCommand
         try {
             $question = $user->getNextQuestion();
         } catch (\Exception $e) {
-            TelegramLog::debug($e->getMessage());
+            TelegramLog::error($e->getMessage());
             return Request::sendMessage(
                 [
                     'chat_id' => $chat_id,
