@@ -29,6 +29,6 @@ try {
 
     // Handle telegram webhook request
     $telegram->handle();
-} catch (Longman\TelegramBot\Exception\TelegramException $e) {
-    Longman\TelegramBot\TelegramLog::initErrorLog(ROOT . $BOT_NAME . '_error.log');
+} catch (\Exception $e) {
+    Longman\TelegramBot\TelegramLog::error($e);
 }

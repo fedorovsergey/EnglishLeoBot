@@ -61,13 +61,7 @@ class StartTrainCommand extends UserCommand
             ];
             return Request::sendMessage($data);
         }
-        if(!empty($question['error_msg'])) {
-            $data = [
-                'chat_id' => $chat_id,
-                'text'    => $question['error_msg'],
-            ];
-            return Request::sendMessage($data);
-        }
+
         $data = [
             'chat_id' => $chat_id,
             'text'    => $question['text'],

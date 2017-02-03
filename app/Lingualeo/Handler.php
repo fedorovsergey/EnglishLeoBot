@@ -44,12 +44,10 @@ class Handler {
         } while ($i<3);
 
         if(empty($getTrainingAnswer)) {
-            throw new Exception('Lingualeo answer is empty');
+            throw new Exception('Answer is empty');
         }
         if(!empty($getTrainingAnswer['error_msg'])) {
-            //TODO lingualeoAnswer
-            TelegramLog::error('Lingualeo error' . $getTrainingAnswer['error_msg']);
-            return ['error_msg' => $getTrainingAnswer['error_msg']];
+            throw new Exception($getTrainingAnswer['error_msg']);
         }
         return $getTrainingAnswer;
     }
