@@ -3,6 +3,9 @@
 namespace Models;
 
 
+use Longman\TelegramBot\DB;
+use PDO;
+
 class Question extends AbstractModel
 {
     const TABLE = 'question';
@@ -13,6 +16,7 @@ class Question extends AbstractModel
     protected $text;
     protected $status;
     protected $lingualeo_id;
+    protected $correct_answer_id;
 
     protected static $_fields = [
         'id',
@@ -20,7 +24,23 @@ class Question extends AbstractModel
         'text',
         'status',
         'lingualeo_id',
+        'correct_answer_id',
     ];
+
+    public static function getActiveByTraining($trainingId)
+    {
+        $table = static::TABLE;
+        $query = Db::getPdo()->prepare("SELECT * FROM {$table} WHERE training_id = :trainingId AND status = :status LIMIT 1");
+        $query->execute(['trainingId' => $trainingId, 'status' => static::STATUS_ACTIVE]);
+        $raw = $query->fetch(PDO::FETCH_ASSOC);
+
+        if (empty($raw)) {
+            return null;
+        }
+        $question = new self;
+        $question->assign($raw);
+        return $question;
+    }
 
     /**
      * @return int
@@ -28,6 +48,14 @@ class Question extends AbstractModel
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
     }
 
     public function __construct()

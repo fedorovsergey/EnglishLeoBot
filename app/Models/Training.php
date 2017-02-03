@@ -70,23 +70,24 @@ class Training extends AbstractModel
      * «апрашивает новую тренировку из lingualeo
      * @param User $user
      * @return Training
+     * @throws \Exception
      */
     private static function getNewFromLingualeo(User $user)
     {
         $rawData = static::getRawTrainingDataFromLingualeo($user);
 
-        $trainingObject = new static;
-        $trainingObject->user_id = $user->getId();
-        $trainingObject->save();
-        $trainingObject->storeQuestionsToDb($rawData);
+        try {
+            Db::getPdo()->beginTransaction();
+            $trainingObject = new static;
+            $trainingObject->user_id = $user->getId();
+            $trainingObject->save();
+            $trainingObject->storeQuestionsToDb($rawData);
 
-        //заглушка чтобы работала отправка слова
-        $rawData = $rawData['game'];
-        foreach($rawData as $question) {
-            $questionWord = $question['text'];
-            return ['error_msg'=> null, 'text'=> "$questionWord"];
+            Db::getPdo()->commit();
+        } catch (\PDOException $e) {
+            Db::getPdo()->rollBack();
+            throw $e;
         }
-        //end
         return $trainingObject;
     }
 
@@ -105,5 +106,10 @@ class Training extends AbstractModel
             $question->setTrainingId($this->id);
             $question->storeToDb($questionData);
         }
+    }
+
+    public function getNextQuestion()
+    {
+        return Question::getActiveByTraining($this->id);
     }
 }

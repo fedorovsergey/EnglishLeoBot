@@ -40,16 +40,16 @@ class StartTrainCommand extends UserCommand
 
         TelegramLog::debug('Lingualeo startTrain command start');
         $user = User::getByChatId($chat_id);
-        TelegramLog::debug('Lingualeo login '.$user->getLogin());
+        TelegramLog::debug('Lingualeo user '.$user->getLogin());
 
         try {
             $question = $user->getNextQuestion();
-        } catch (\Lingualeo\Exception $e) {
+        } catch (\Exception $e) {
             TelegramLog::debug($e->getMessage());
             return Request::sendMessage(
                 [
                     'chat_id' => $chat_id,
-                    'text' => '������ Lingualeo: '.$e->getMessage(),
+                    'text' => 'При выполнении возникла ошибка: ' .$e->getMessage(),
                 ]
             );
         }
@@ -64,7 +64,7 @@ class StartTrainCommand extends UserCommand
 
         $data = [
             'chat_id' => $chat_id,
-            'text'    => $question['text'],
+            'text'    => $question->getText(),
         ];
 
         return Request::sendMessage($data);

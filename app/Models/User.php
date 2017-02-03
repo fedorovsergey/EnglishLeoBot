@@ -67,9 +67,17 @@ class User extends AbstractModel
     public function getNextQuestion()
     {
         $activeTraining = $this->getActiveTraining();
-        return $activeTraining;
+        $nextQuestion = $activeTraining->getNextQuestion();
+        if(null == $nextQuestion) {
+            throw new Exception('No more active question');
+        }
+
+        return $nextQuestion;
     }
 
+    /**
+     * @return Training
+     */
     private function getActiveTraining()
     {
         return Training::getActiveByUserId($this);
