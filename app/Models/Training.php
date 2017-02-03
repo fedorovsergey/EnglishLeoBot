@@ -18,6 +18,13 @@ class Training extends AbstractModel
     protected $type;
     protected $status;
 
+    protected static $_fields = [
+        'id',
+        'user_id',
+        'type',
+        'status',
+    ];
+
     public function __construct()
     {
         $this->type = 0;
@@ -70,7 +77,8 @@ class Training extends AbstractModel
 
         $trainingObject = new static;
         $trainingObject->user_id = $user->getId();
-        $trainingObject->storeToDb($rawData);
+        $trainingObject->save();
+        $trainingObject->storeQuestionsToDb($rawData);
 
         //заглушка чтобы работала отправка слова
         $rawData = $rawData['game'];
@@ -87,14 +95,8 @@ class Training extends AbstractModel
         return (new Handler())->getNewTraining($user);
     }
 
-    private function storeToDb($rawData)
+    private function storeQuestionsToDb($rawData)
     {
-        $this->save([
-            'user_id'=>$this->user_id,
-            'type'=>$this->type,
-            'status'=>$this->status,
-        ]);
-
         if(empty($rawData['game'])) {
             throw new Exception('Empty game data');
         }

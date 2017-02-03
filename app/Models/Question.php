@@ -12,6 +12,15 @@ class Question extends AbstractModel
     protected $training_id;
     protected $text;
     protected $status;
+    protected $lingualeo_id;
+
+    protected static $_fields = [
+        'id',
+        'training_id',
+        'text',
+        'status',
+        'lingualeo_id',
+    ];
 
     /**
      * @return int
@@ -28,22 +37,20 @@ class Question extends AbstractModel
 
     public function storeToDb($questionData)
     {
-        $this->save([
-            'training_id'=>$this->training_id,
+        $this->assign([
             'text'=>$questionData['text'],
-            'status'=>$this->status,
             'lingualeo_id'=>$questionData['id'],
-        ]);
+        ])->save();
 
         if(empty($questionData['answers'])) {
             throw new \Exception('Empty answers data');
         }
         foreach($questionData['answers'] as $answerId => $answerData) {
             $answer = new Answer();
-            $answer->save([
+            $answer->assign([
                 'text'=>$answerData['answerText'],
                 'question_id' => $this->id,
-            ]);
+            ])->save();
         }
     }
 

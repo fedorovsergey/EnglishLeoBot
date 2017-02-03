@@ -13,6 +13,12 @@ class User extends AbstractModel
     protected $id;
     protected $login;
 
+    protected static $_fields = [
+        'id',
+        'login',
+        'password',
+    ];
+
     /**
      * @return mixed
      */

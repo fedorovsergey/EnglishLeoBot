@@ -23,6 +23,8 @@ class AbstractModel
 //        Db::getPdo()->query("SELECT * FROM $table where ");
 //    }
 
+    protected static $_fields = [];
+
     protected function assign($data){
         foreach ($data as $k => $v) {
             if (property_exists(get_class($this), $k)) {
@@ -35,13 +37,19 @@ class AbstractModel
         return $this;
     }
 
-    public function save(array $fields)
+    public function save()
     {
+        $fields = $this->getRawData();
         if (empty($fields[self::PRIMARY_KEY]) ? $this->insert($fields) : $this->update($fields)) {
             return $this;
         } else {
             throw new \Exception('Не удалось сохранить объект '.static::class);
         }
+    }
+
+    public static function getFields()
+    {
+        return static::$_fields;
     }
 
     private function insert($fields)
@@ -63,5 +71,14 @@ class AbstractModel
     private function setId($param)
     {
         $this->{self::PRIMARY_KEY} = $param;
+    }
+
+    private function getRawData()
+    {
+        $data = [];
+        foreach (static::getFields() as $field) {
+            $data[$field] = $this->{$field};
+        }
+        return $data;
     }
 }

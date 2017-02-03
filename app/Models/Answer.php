@@ -9,4 +9,10 @@ class Answer extends AbstractModel
     protected $id;
     protected $question_id;
     protected $text;
+
+    protected static $_fields = [
+        'id',
+        'question_id',
+        'text',
+    ];
 }
