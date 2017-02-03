@@ -432,8 +432,6 @@ class Telegram
         //This is necessary to "require" all the necessary command files!
         $c = $this->getCommandsList();
 
-        DB::insertRequest($this->update);
-
         return $this->executeCommand($command);
     }
 
