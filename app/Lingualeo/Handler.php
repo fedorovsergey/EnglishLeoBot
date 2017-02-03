@@ -9,7 +9,7 @@ use Models\User;
 class Handler {
     private function login(User $user)
     {
-        TelegramLog::debug('Lingualeo login start');
+        TelegramLog::debug('Lingualeo login request start');
         $data = [
             "email" => $user->getLogin(),
             "password" => $user->getPassword()

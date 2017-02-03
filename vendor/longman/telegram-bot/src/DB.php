@@ -75,7 +75,10 @@ class DB
         }
 
         $dsn     = 'mysql:host=' . $credentials['host'] . ';dbname=' . $credentials['database'];
-        $options = [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $encoding];
+        $options = [
+            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $encoding,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ];
         try {
             $pdo = new PDO($dsn, $credentials['user'], $credentials['password'], $options);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);

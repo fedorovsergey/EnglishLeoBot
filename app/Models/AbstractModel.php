@@ -27,10 +27,11 @@ class AbstractModel
 
     protected function assign($data){
         foreach ($data as $k => $v) {
-            if (property_exists(get_class($this), $k)) {
+            $className = get_class($this);
+            if (property_exists($className, $k)) {
                 $this->{$k} = $v;
             } else {
-                throw new \Exception("Property $k does not exist");
+                throw new Exception("Property `$k` does not exist in $className");
             }
         }
 
