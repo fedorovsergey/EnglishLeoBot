@@ -64,7 +64,7 @@ class StartTrainCommand extends UserCommand
 
         $data = [
             'chat_id' => $chat_id,
-            'text'    => $question->getText(),
+            'text'    => $question->ask(),
         ];
 
         return Request::sendMessage($data);

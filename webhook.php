@@ -14,17 +14,17 @@ try {
     // Create Telegram API object
     $telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
     
-    //Âêëþ÷àåì ëîãèðîâàíèå 
+    //Ð’ÐºÐ»ÑŽÑ‡Ð°ÐµÐ¼ Ð»Ð¾Ð³Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ 
     Longman\TelegramBot\TelegramLog::initialize();
     Longman\TelegramBot\TelegramLog::initErrorLog(ROOT . $BOT_NAME . '_error.log');
     Longman\TelegramBot\TelegramLog::initDebugLog(ROOT . $BOT_NAME . '_debug.log');
     Longman\TelegramBot\TelegramLog::initUpdateLog(ROOT . $BOT_NAME . '_update.log');
-    
-    //ïîäêëþ÷àåì ñâîè êîìàíäû
+
+    //Ð¿Ð¾Ð´ÐºÐ»ÑŽÑ‡Ð°ÐµÐ¼ ÑÐ²Ð¾Ð¸ ÐºÐ¾Ð¼Ð°Ð½Ð´Ñ‹
     $commands_folder = CLASS_ROOT . 'Commands/';
     $telegram->addCommandsPath($commands_folder);
 
-    //âêëþ÷àåì áàçó äàííûõ
+    //Ð²ÐºÐ»ÑŽÑ‡Ð°ÐµÐ¼ Ð±Ð°Ð·Ñƒ Ð´Ð°Ð½Ð½Ñ‹Ñ…
     $telegram->enableMySQL(require CLASS_ROOT . 'config/database.php');
 
     // Handle telegram webhook request

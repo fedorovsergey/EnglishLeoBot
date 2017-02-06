@@ -64,6 +64,10 @@ class User extends AbstractModel
         return ROOT  . "/cookie/{$this->getId()}.txt";
     }
 
+    /**
+     * @return Question
+     * @throws Exception
+     */
     public function getNextQuestion()
     {
         $activeTraining = $this->getActiveTraining();

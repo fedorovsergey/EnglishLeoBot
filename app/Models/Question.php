@@ -58,6 +58,19 @@ class Question extends AbstractModel
         return $this->text;
     }
 
+    public function ask()
+    {
+        return  "Выберите правильный переод слова:\n\n{$this->getText()}\n";
+    }
+
+    /**
+     * @return Answer[]
+     */
+    private function getAnswers()
+    {
+        return Answer::getByQuestionId($this->id);
+    }
+
     public function __construct()
     {
         $this->status = static::STATUS_ACTIVE;
