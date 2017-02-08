@@ -107,6 +107,11 @@ class Question extends AbstractModel
                 'text'=>strtolower($answerData['answerText']),
                 'question_id' => $this->id,
             ])->save();
+            if($answerId == $questionData['id']) {
+                $this->assign([
+                    'correct_answer_id'=>$answer->getId(),
+                ])->save();
+            }
         }
     }
 

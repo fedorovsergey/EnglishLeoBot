@@ -48,4 +48,9 @@ class Answer extends AbstractModel
     {
         return $this->text;
     }
+
+    public function getId()
+    {
+        return $this->id;
+    }
 }

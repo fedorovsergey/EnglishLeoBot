@@ -66,7 +66,12 @@ class AbstractModel
     }
     private function update($fields)
     {
-        return $this;
+        $tableName = static::TABLE;
+        $setFieldPlaceholders = implode(', ', array_map(function($v){return $v.' = :'.$v;}, array_diff(array_keys($fields), ['id'])));
+        $sql = "UPDATE $tableName SET $setFieldPlaceholders WHERE id = :id";
+        $stmt = Db::getPdo()->prepare($sql);
+        $stmt->execute($fields);
+        return true;
     }
 
     private function setId($param)
