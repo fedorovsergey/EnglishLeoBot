@@ -94,7 +94,7 @@ class Question extends AbstractModel
     public function storeToDb($questionData)
     {
         $this->assign([
-            'text'=>$questionData['text'],
+            'text'=>strtolower($questionData['text']),
             'lingualeo_id'=>$questionData['id'],
         ])->save();
 
@@ -104,7 +104,7 @@ class Question extends AbstractModel
         foreach($questionData['answers'] as $answerId => $answerData) {
             $answer = new Answer();
             $answer->assign([
-                'text'=>$answerData['answerText'],
+                'text'=>strtolower($answerData['answerText']),
                 'question_id' => $this->id,
             ])->save();
         }
