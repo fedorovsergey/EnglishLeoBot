@@ -108,8 +108,33 @@ class Training extends AbstractModel
         }
     }
 
+    public static function getById($id)
+    {
+        $table = static::TABLE;
+        $query = Db::getPdo()->prepare("SELECT * FROM {$table} WHERE id = :id");
+        $query->execute(['id' => $id]);
+        $raw = $query->fetch(PDO::FETCH_ASSOC);
+
+        if (empty($raw)) {
+            return null;
+        }
+        $training = new self;
+        $training->assign($raw);
+        return $training;
+    }
+
     public function getNextQuestion()
     {
         return Question::getActiveByTraining($this->id);
+    }
+
+    public function sendResultLingualeo()
+    {
+        return true;
+    }
+
+    public function markFinished()
+    {
+        $this->assign(['status'=>static::STATUS_FINISHED])->save();
     }
 }

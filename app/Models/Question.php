@@ -146,5 +146,26 @@ class Question extends AbstractModel
     private function markAnswered($correct)
     {
         $this->assign(['answered_correct' => (int) $correct, 'status' => static::STATUS_FINISHED])->save();
+        $training = $this->getTraining();
+        if(null === $training->getNextQuestion()) {
+            $training->sendResultLingualeo();
+            $training->markFinished();
+        }
+    }
+
+    /**
+     * @return Training
+     */
+    private function getTraining()
+    {
+        return Training::getById($this->getTrainingId());
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTrainingId()
+    {
+        return $this->training_id;
     }
 }
