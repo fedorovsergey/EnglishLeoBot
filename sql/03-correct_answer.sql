@@ -1,0 +1,1 @@
+ALTER TABLE question ADD answered_correct INT DEFAULT NULL  NULL;

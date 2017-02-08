@@ -44,6 +44,28 @@ class Answer extends AbstractModel
         return $answersArray;
     }
 
+    /**
+     * @param $questionId
+     * @param $text
+     * @return Answer
+     */
+    public static function getByQuestionIdAndText($questionId, $text)
+    {
+        $table = static::TABLE;
+        $query = Db::getPdo()->prepare(
+            "SELECT * FROM {$table} 
+            WHERE question_id = :questionId
+            AND text = :text
+            LIMIT 1"
+        );
+        $query->execute(['questionId' => $questionId, 'text' => $text]);
+
+        $row = $query->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT);
+        $answer = new self;
+        $answer->assign($row);
+        return $answer;
+    }
+
     public function getText()
     {
         return $this->text;

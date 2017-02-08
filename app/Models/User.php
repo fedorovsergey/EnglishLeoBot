@@ -91,9 +91,12 @@ class User extends AbstractModel
     /**
      * Проверка ответа пользователя
      * @param $text
+     * @return bool
      */
     public function checkAnswer($text)
     {
-        TelegramLog::debug('answer:'. $text);
+        //предполагаем что отвечали на этот вопрос
+        $question = $this->getNextQuestion();
+        return $question->checkAndMarkAnswered($text);
     }
 }

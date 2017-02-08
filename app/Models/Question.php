@@ -18,6 +18,7 @@ class Question extends AbstractModel
     protected $status;
     protected $lingualeo_id;
     protected $correct_answer_id;
+    protected $answered_correct;
 
     protected static $_fields = [
         'id',
@@ -26,6 +27,7 @@ class Question extends AbstractModel
         'status',
         'lingualeo_id',
         'correct_answer_id',
+        'answered_correct',
     ];
 
     public static function getActiveByTraining($trainingId)
@@ -118,5 +120,31 @@ class Question extends AbstractModel
     public function setTrainingId($id)
     {
         $this->training_id = $id;
+    }
+
+    /**
+     * Проыеряет ответ и помечает что уже отвечен
+     * @param $text
+     * @return bool
+     */
+    public function checkAndMarkAnswered($text)
+    {
+        $correctAnswer = Answer::getByQuestionIdAndText($this->id, $text);
+        $correct = (null !== $correctAnswer) && $correctAnswer->getId() == $this->getCorrectAnswerId();
+        $this->markAnswered($correct);
+        return $correct;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCorrectAnswerId()
+    {
+        return $this->correct_answer_id;
+    }
+
+    private function markAnswered($correct)
+    {
+        $this->assign(['answered_correct' => (int) $correct, 'status' => static::STATUS_FINISHED])->save();
     }
 }

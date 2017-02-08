@@ -44,7 +44,16 @@ class GenericmessageCommand extends SystemCommand
     {
         $chat_id = $this->getMessage()->getChat()->getId();
         $user = User::getByChatId($chat_id);
-        $user->checkAnswer($this->getMessage()->getText(true));
-        return Request::emptyResponse();
+        if($user->checkAnswer($this->getMessage()->getText(true))) {
+            $resultText = "Верно!\n Следующий вопрос /startTrain";
+        } else {
+            $resultText = "Неверно!\n Следующий вопрос /startTrain";
+        }
+
+        $data = [
+            'chat_id'      => $chat_id,
+            'text'         => $resultText,
+        ];
+        return Request::sendMessage($data);
     }
 }
