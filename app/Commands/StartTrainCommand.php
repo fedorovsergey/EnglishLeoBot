@@ -63,8 +63,9 @@ class StartTrainCommand extends UserCommand
         }
 
         $data = [
-            'chat_id' => $chat_id,
-            'text'    => $question->ask(),
+            'chat_id'      => $chat_id,
+            'text'         => $question->ask(),
+            'reply_markup' => $question->getKeyboardAnswers(),
         ];
 
         return Request::sendMessage($data);

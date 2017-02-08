@@ -4,6 +4,7 @@ namespace Models;
 
 
 use Longman\TelegramBot\DB;
+use Longman\TelegramBot\Entities\Keyboard;
 use PDO;
 
 class Question extends AbstractModel
@@ -61,6 +62,20 @@ class Question extends AbstractModel
     public function ask()
     {
         return  "Выберите правильный переод слова:\n\n{$this->getText()}\n";
+    }
+
+    /**
+     * Возвращает кнопки с ответами
+     * @return Keyboard
+     */
+    public function getKeyboardAnswers()
+    {
+        $answersText = array_values($this->getAnswers());
+        return new Keyboard(
+            [$answersText[0]->getText(), $answersText[1]->getText()],
+            [$answersText[2]->getText(), $answersText[3]->getText()],
+            [$answersText[4]->getText()]
+        );
     }
 
     /**

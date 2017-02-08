@@ -10,9 +10,9 @@
 
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Commands\SystemCommand;
+use Models\User;
 
 /**
  * Generic message command
@@ -35,22 +35,6 @@ class GenericmessageCommand extends SystemCommand
     protected $version = '1.1.0';
 
     /**
-     * @var bool
-     */
-    protected $need_mysql = true;
-
-    /**
-     * Execution if MySQL is required but not available
-     *
-     * @return \Longman\TelegramBot\Entities\ServerResponse
-     */
-    public function executeNoDb()
-    {
-        //Do nothing
-        return Request::emptyResponse();
-    }
-
-    /**
      * Execute command
      *
      * @return \Longman\TelegramBot\Entities\ServerResponse
@@ -58,16 +42,9 @@ class GenericmessageCommand extends SystemCommand
      */
     public function execute()
     {
-        //If a conversation is busy, execute the conversation command after handling the message
-        $conversation = new Conversation(
-            $this->getMessage()->getFrom()->getId(),
-            $this->getMessage()->getChat()->getId()
-        );
-        //Fetch conversation command if it exists and execute it
-        if ($conversation->exists() && ($command = $conversation->getCommand())) {
-            return $this->telegram->executeCommand($command);
-        }
-
+        $chat_id = $this->getMessage()->getChat()->getId();
+        $user = User::getByChatId($chat_id);
+        $user->checkAnswer($this->getMessage()->getText(true));
         return Request::emptyResponse();
     }
 }

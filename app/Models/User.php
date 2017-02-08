@@ -4,6 +4,7 @@ namespace Models;
 
 
 use Longman\TelegramBot\DB;
+use Longman\TelegramBot\TelegramLog;
 use PDO;
 
 class User extends AbstractModel
@@ -85,5 +86,14 @@ class User extends AbstractModel
     private function getActiveTraining()
     {
         return Training::getActiveByUserId($this);
+    }
+
+    /**
+     * Проверка ответа пользователя
+     * @param $text
+     */
+    public function checkAnswer($text)
+    {
+        TelegramLog::debug('answer:'. $text);
     }
 }
