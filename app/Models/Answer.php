@@ -66,6 +66,26 @@ class Answer extends AbstractModel
         return $answer;
     }
 
+    /**
+     * @param $id
+     * @return Answer
+     */
+    public static function getById($id)
+    {
+        $table = static::TABLE;
+        $query = Db::getPdo()->prepare(
+            "SELECT * FROM {$table} 
+            WHERE id = :id
+            LIMIT 1"
+        );
+        $query->execute(['id' => $id]);
+
+        $row = $query->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT);
+        $answer = new self;
+        $answer->assign($row);
+        return $answer;
+    }
+
     public function getText()
     {
         return $this->text;

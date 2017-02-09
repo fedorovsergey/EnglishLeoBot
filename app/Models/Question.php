@@ -148,16 +148,16 @@ class Question extends AbstractModel
     }
 
     /**
-     * Проыеряет ответ и помечает что уже отвечен
+     * Проыеряет ответ и помечает что уже отвечен. Возвращает текст сообщения верно/неверно
      * @param $text
-     * @return bool
+     * @return string
      */
     public function checkAndMarkAnswered($text)
     {
-        $correctAnswer = Answer::getByQuestionIdAndText($this->id, $text);
-        $correct = (null !== $correctAnswer) && $correctAnswer->getId() == $this->getCorrectAnswerId();
+        $usersAnswer = Answer::getByQuestionIdAndText($this->id, $text);
+        $correct = (null !== $usersAnswer) && $usersAnswer->getId() == $this->getCorrectAnswerId();
         $this->markAnswered($correct);
-        return $correct;
+        return $correct ? $this->getCorrectMessageText() : $this->getIncorrectMessageText($this->getCorrectAnswer());
     }
 
     /**
@@ -192,5 +192,31 @@ class Question extends AbstractModel
     public function getTrainingId()
     {
         return $this->training_id;
+    }
+
+    /**
+     * @return string
+     */
+    private function getCorrectMessageText()
+    {
+        return "Верно!\nСледующий вопрос /startTrain";
+    }
+
+    /**
+     * @param Answer $answer
+     * @return string
+     */
+    private function getIncorrectMessageText(Answer $answer)
+    {
+        return "Неверно!\nПравильный ответ {$answer->getText()}\nСледующий вопрос /startTrain";
+    }
+
+    /**
+     * @return Answer
+     */
+    private function getCorrectAnswer()
+    {
+        $ans = Answer::getById($this->correct_answer_id);
+        return $ans;
     }
 }
