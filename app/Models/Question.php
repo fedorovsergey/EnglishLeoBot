@@ -81,7 +81,7 @@ class Question extends AbstractModel
 
     public function ask()
     {
-        return  "Выберите правильный переод слова:\n\n{$this->getText()}\n";
+        return  "Выберите правильный перевод слова:\n\n<b>{$this->getText()}</b>\n";
     }
 
     /**
@@ -148,7 +148,7 @@ class Question extends AbstractModel
     }
 
     /**
-     * Проыеряет ответ и помечает что уже отвечен. Возвращает текст сообщения верно/неверно
+     * Проверяет ответ и помечает что уже отвечен. Возвращает текст сообщения верно/неверно
      * @param $text
      * @return string
      */
@@ -199,7 +199,7 @@ class Question extends AbstractModel
      */
     private function getCorrectMessageText()
     {
-        return "Верно!\nСледующий вопрос /startTrain";
+        return "<b>Верно!</b>\n";
     }
 
     /**
@@ -208,7 +208,7 @@ class Question extends AbstractModel
      */
     private function getIncorrectMessageText(Answer $answer)
     {
-        return "Неверно!\nПравильный ответ {$answer->getText()}\nСледующий вопрос /startTrain";
+        return "<b>Неверно!</b>\nПравильный ответ <b>{$answer->getText()}</b>\n";
     }
 
     /**

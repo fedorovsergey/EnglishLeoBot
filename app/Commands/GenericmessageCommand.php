@@ -12,6 +12,7 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Commands\SystemCommand;
+use Longman\TelegramBot\TelegramLog;
 use Models\User;
 
 /**
@@ -44,11 +45,36 @@ class GenericmessageCommand extends SystemCommand
     {
         $chat_id = $this->getMessage()->getChat()->getId();
         $user = User::getByChatId($chat_id);
+
+        //проверка ответа
         $resultText = $user->checkAnswer($this->getMessage()->getText(true));
+
+        //Поиск нового вопроса
+        try {
+            $question = $user->getNextQuestion();
+        } catch (\Exception $e) {
+            TelegramLog::error($e->getMessage());
+            return Request::sendMessage(
+                [
+                    'chat_id' => $chat_id,
+                    'text' => 'При выполнении возникла ошибка: ' .$e->getMessage(),
+                ]
+            );
+        }
+
+        if(!$question) {
+            $data = [
+                'chat_id' => $chat_id,
+                'text'    => 'Internal Server Error',
+            ];
+            return Request::sendMessage($data);
+        }
 
         $data = [
             'chat_id'      => $chat_id,
-            'text'         => $resultText,
+            'text'         => $resultText . $question->ask(),
+            'reply_markup' => $question->getKeyboardAnswers(),
+            'parse_mode'   => 'html',
         ];
         return Request::sendMessage($data);
     }
