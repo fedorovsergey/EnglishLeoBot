@@ -91,6 +91,7 @@ class Question extends AbstractModel
     public function getKeyboardAnswers()
     {
         $answersText = array_values($this->getAnswers());
+        shuffle($answersText);
         return new Keyboard(
             [
                 'keyboard' => [
