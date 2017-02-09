@@ -92,9 +92,15 @@ class Question extends AbstractModel
     {
         $answersText = array_values($this->getAnswers());
         return new Keyboard(
-            [$answersText[0]->getText(), $answersText[1]->getText()],
-            [$answersText[2]->getText(), $answersText[3]->getText()],
-            [$answersText[4]->getText()]
+            [
+                'keyboard' => [
+                    [$answersText[0]->getText(), $answersText[1]->getText()],
+                    [$answersText[2]->getText(), $answersText[3]->getText()],
+                    [$answersText[4]->getText()],
+                ],
+                'resize_keyboard' => true,
+                'one_time_keyboard' => true,
+            ]
         );
     }
 
