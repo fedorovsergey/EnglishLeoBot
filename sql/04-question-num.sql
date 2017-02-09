@@ -1,0 +1,1 @@
+ALTER TABLE question ADD num INT DEFAULT 0 NOT NULL;

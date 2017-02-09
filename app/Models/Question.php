@@ -19,6 +19,7 @@ class Question extends AbstractModel
     protected $lingualeo_id;
     protected $correct_answer_id;
     protected $answered_correct;
+    protected $num;
 
     protected static $_fields = [
         'id',
@@ -28,12 +29,18 @@ class Question extends AbstractModel
         'lingualeo_id',
         'correct_answer_id',
         'answered_correct',
+        'num',
     ];
 
     public static function getActiveByTraining($trainingId)
     {
         $table = static::TABLE;
-        $query = Db::getPdo()->prepare("SELECT * FROM {$table} WHERE training_id = :trainingId AND status = :status LIMIT 1");
+        $query = Db::getPdo()->prepare(
+            "SELECT * FROM {$table} 
+             WHERE training_id = :trainingId 
+                AND status = :status
+             ORDER BY NUM
+             LIMIT 1");
         $query->execute(['trainingId' => $trainingId, 'status' => static::STATUS_ACTIVE]);
         $raw = $query->fetch(PDO::FETCH_ASSOC);
 
@@ -81,7 +88,7 @@ class Question extends AbstractModel
 
     public function ask()
     {
-        return  "Выберите правильный перевод слова:\n\n<b>{$this->getText()}</b>\n";
+        return  "Вопрос {$this->getNum()} из 10\nВыберите правильный перевод слова:\n\n<b>{$this->getText()}</b>\n";
     }
 
     /**
@@ -100,7 +107,6 @@ class Question extends AbstractModel
                     [$answersText[4]->getText()],
                 ],
                 'resize_keyboard' => true,
-                'one_time_keyboard' => true,
             ]
         );
     }
@@ -218,5 +224,15 @@ class Question extends AbstractModel
     {
         $ans = Answer::getById($this->correct_answer_id);
         return $ans;
+    }
+
+    private function getNum()
+    {
+        return $this->num;
+    }
+
+    public function setNum($num)
+    {
+        $this->num = $num;
     }
 }

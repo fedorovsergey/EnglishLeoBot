@@ -40,14 +40,14 @@ class Training extends AbstractModel
     {
         $training = static::getActiveFromDb($user);
         if (null === $training) {
-            //çàïðîñèì íîâóþ ó ñàéòà
+            //Ð·Ð°Ð¿Ñ€Ð¾ÑÐ¸Ð¼ Ð½Ð¾Ð²ÑƒÑŽ Ñƒ ÑÐ°Ð¹Ñ‚Ð°
             $training = static::getNewFromLingualeo($user);
         }
         return $training;
     }
 
     /**
-     * Âîçâðàùàåò íåçàâåðøåííóþ òðåíèðîâêó èç áàçû
+     * Ð’Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÑ‚ Ð½ÐµÐ·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð½ÑƒÑŽ Ñ‚Ñ€ÐµÐ½Ð¸Ñ€Ð¾Ð²ÐºÑƒ Ð¸Ð· Ð±Ð°Ð·Ñ‹
      * @param User $user
      * @return Training|null
      */
@@ -67,7 +67,7 @@ class Training extends AbstractModel
     }
 
     /**
-     * Çàïðàøèâàåò íîâóþ òðåíèðîâêó èç lingualeo
+     * Ð—Ð°Ð¿Ñ€Ð°ÑˆÐ¸Ð²Ð°ÐµÑ‚ Ð½Ð¾Ð²ÑƒÑŽ Ñ‚Ñ€ÐµÐ½Ð¸Ñ€Ð¾Ð²ÐºÑƒ Ð¸Ð· lingualeo
      * @param User $user
      * @return Training
      * @throws \Exception
@@ -101,10 +101,13 @@ class Training extends AbstractModel
         if(empty($rawData['game'])) {
             throw new Exception('Empty game data');
         }
+        $k = 1;
         foreach($rawData['game'] as $questionId => $questionData) {
             $question = new Question();
             $question->setTrainingId($this->id);
+            $question->setNum($k);
             $question->storeToDb($questionData);
+            $k++;
         }
     }
 
