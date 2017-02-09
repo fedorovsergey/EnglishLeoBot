@@ -46,6 +46,24 @@ class Question extends AbstractModel
     }
 
     /**
+     * Возвращает массив id => correct для всех вопросов тренировки
+     * @param $trainingId
+     * @return array
+     */
+    public static function getAnsweredRawData($trainingId)
+    {
+        $table = static::TABLE;
+        $query = Db::getPdo()->prepare("SELECT lingualeo_id, answered_correct FROM {$table} WHERE training_id = :trainingId");
+        $query->execute(['trainingId' => $trainingId]);
+
+        $answersArray = [];
+        while ($row = $query->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) {
+            $answersArray[$row['lingualeo_id']] = $row['answered_correct'];
+        }
+        return $answersArray;
+    }
+
+    /**
      * @return int
      */
     public function getStatus()

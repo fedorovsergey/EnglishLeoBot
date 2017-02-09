@@ -70,4 +70,31 @@ class Handler {
 
         return json_decode($result, 1);
     }
+
+    public function sendFinishedTraining(User $user, array $data)
+    {
+        $train = 'https://lingualeo.com/training/result/translate_word';
+        $postData = [
+            'name' => 'translate_word',
+            'wordSetId'=>0,
+            'words' => $data
+        ];
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($postData));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Requested-With: XMLHttpRequest"));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_URL, $train);
+        curl_setopt($curl, CURLOPT_COOKIEFILE, $user->getCookiePath());
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        $result = curl_exec($curl);
+        curl_close($curl);
+
+        if(strpos($result, 'r_password')!== false) {
+            TelegramLog::debug('Lingualeo Authorization required');
+            return ['error_msg' => 'Authorization required'];
+        }
+        TelegramLog::debug(print_r(json_decode($result, 1), true));
+        return json_decode($result, 1);
+    }
 }

@@ -130,11 +130,29 @@ class Training extends AbstractModel
 
     public function sendResultLingualeo()
     {
-        return true;
+        return (new Handler())->sendFinishedTraining($this->getUser(), $this->getAnsweredData());
     }
 
     public function markFinished()
     {
         $this->assign(['status'=>static::STATUS_FINISHED])->save();
+    }
+
+    private function getUser()
+    {
+        return User::getById($this->getUserId());
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
+
+    private function getAnsweredData()
+    {
+        return Question::getAnsweredRawData($this->id);
     }
 }

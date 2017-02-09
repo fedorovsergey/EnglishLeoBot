@@ -20,6 +20,18 @@ class User extends AbstractModel
         'password',
     ];
 
+    public static function getById($id)
+    {
+        $table = static::TABLE;
+        $query = Db::getPdo()->prepare("SELECT * FROM {$table} WHERE id = :id");
+        $query->execute(['id'=>$id]);
+        $raw = $query->fetch(PDO::FETCH_ASSOC);
+
+        $user = new self;
+        $user->assign($raw);
+        return $user;
+    }
+
     /**
      * @return mixed
      */
