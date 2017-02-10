@@ -13,6 +13,7 @@ class User extends AbstractModel
 
     protected $id;
     protected $login;
+    protected $active_training = false;
 
     protected static $_fields = [
         'id',
@@ -97,7 +98,10 @@ class User extends AbstractModel
      */
     private function getActiveTraining()
     {
-        return Training::getActiveByUserId($this);
+        if(false === $this->active_training) {
+            $this->active_training = Training::getActiveByUserId($this);
+        }
+        return $this->active_training;
     }
 
     /**
@@ -110,5 +114,28 @@ class User extends AbstractModel
         //предполагаем что отвечали на этот вопрос
         $question = $this->getNextQuestion();
         return $question->checkAndMarkAnswered($text);
+    }
+
+    /**
+     * Возвращает окончена ли текущая тренировка и отправляет результаты, если окончена
+     * @return bool
+     */
+    public function trainingIsFinished()
+    {
+        $training = $this->getActiveTraining();
+        if(null === $training->getNextQuestion()) {
+            $training->sendResultLingualeo();
+            $training->markFinished();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrainingSummaryText()
+    {
+        return $this->getActiveTraining()->getSummaryText();
     }
 }

@@ -158,4 +158,15 @@ class Training extends AbstractModel
     {
         return Question::getAnsweredRawData($this->id);
     }
+
+    public function getSummaryText()
+    {
+        $correctCount = $this->getCorrectAnswersCount();
+        return "Тренировка окончена.\nВы ответили правильно на $correctCount из 10 вопросов.\nНачать новую - /startTraining";
+    }
+
+    private function getCorrectAnswersCount()
+    {
+        return Question::getCorrectAnswersCountByTrainingId($this->id);
+    }
 }

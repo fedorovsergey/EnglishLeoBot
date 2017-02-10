@@ -70,6 +70,17 @@ class Question extends AbstractModel
         return $answersArray;
     }
 
+    public static function getCorrectAnswersCountByTrainingId($trainingId)
+    {
+        $table = static::TABLE;
+        $query = Db::getPdo()->prepare(
+            "SELECT COUNT(*) FROM {$table} 
+             WHERE training_id = :trainingId
+             AND answered_correct = 1");
+        $query->execute(['trainingId' => $trainingId]);
+        return $query->fetchColumn();
+    }
+
     /**
      * @return int
      */
@@ -177,11 +188,6 @@ class Question extends AbstractModel
     private function markAnswered($correct)
     {
         $this->assign(['answered_correct' => (int) $correct, 'status' => static::STATUS_FINISHED])->save();
-        $training = $this->getTraining();
-        if(null === $training->getNextQuestion()) {
-            $training->sendResultLingualeo();
-            $training->markFinished();
-        }
     }
 
     /**

@@ -10,6 +10,7 @@
 
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
+use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\TelegramLog;
@@ -49,6 +50,14 @@ class GenericmessageCommand extends SystemCommand
         //проверка ответа
         $resultText = $user->checkAnswer($this->getMessage()->getText(true));
 
+        if ($user->trainingIsFinished()) {
+            $data = [
+                'chat_id'      => $chat_id,
+                'text'         => $user->getTrainingSummaryText(),
+                'reply_markup' => Keyboard::remove(),
+            ];
+            return Request::sendMessage($data);
+        }
         //Поиск нового вопроса
         try {
             $question = $user->getNextQuestion();
