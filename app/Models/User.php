@@ -4,7 +4,6 @@ namespace Models;
 
 
 use Longman\TelegramBot\DB;
-use Longman\TelegramBot\TelegramLog;
 use PDO;
 
 class User extends AbstractModel
@@ -13,12 +12,15 @@ class User extends AbstractModel
 
     protected $id;
     protected $login;
+    protected $password;
+    protected $chat_id;
     protected $active_training = false;
 
     protected static $_fields = [
         'id',
         'login',
         'password',
+        'chat_id'
     ];
 
     public static function getById($id)
@@ -26,12 +28,26 @@ class User extends AbstractModel
         $table = static::TABLE;
         $query = Db::getPdo()->prepare("SELECT * FROM {$table} WHERE id = :id");
         $query->execute(['id'=>$id]);
-        $raw = $query->fetch(PDO::FETCH_ASSOC);
+        $row = $query->fetch(PDO::FETCH_ASSOC);
         if (empty($row)) {
             return null;
         }
         $user = new self;
-        $user->assign($raw);
+        $user->assign($row);
+        return $user;
+    }
+
+    public static function create($login, $pass, $chat_id)
+    {
+        $user = new static();
+        $user->assign(
+            [
+                'login'=>$login,
+                'password'=>$pass,
+                'chat_id'=>$chat_id,
+            ]
+        );
+        $user->save();
         return $user;
     }
 
@@ -50,9 +66,6 @@ class User extends AbstractModel
     {
         return $this->password;
     }
-
-    protected $password;
-    protected $chat_id;
 
     /**
      * @param $chatId
