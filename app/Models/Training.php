@@ -162,7 +162,7 @@ class Training extends AbstractModel
     public function getSummaryText()
     {
         $correctCount = $this->getCorrectAnswersCount();
-        return "Тренировка окончена.\nВы ответили правильно на $correctCount из 10 вопросов.\nНачать новую - /startTraining";
+        return "Тренировка окончена.\nВы ответили правильно на $correctCount из 10 вопросов.\nНачать новую - /startTrain";
     }
 
     private function getCorrectAnswersCount()
