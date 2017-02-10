@@ -41,6 +41,7 @@ class Handler {
             if(!empty($getTrainingAnswer) && empty($getTrainingAnswer['error_msg'])) {
                 break;
             }
+            $i++;
         } while ($i<3);
 
         if(empty($getTrainingAnswer)) {
