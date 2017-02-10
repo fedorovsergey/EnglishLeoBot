@@ -43,12 +43,22 @@ class User extends AbstractModel
         $user->assign(
             [
                 'login'=>$login,
-                'password'=>$pass,
+                'password'=>static::encrypt($pass),
                 'chat_id'=>$chat_id,
             ]
         );
         $user->save();
         return $user;
+    }
+
+    private static function encrypt($pass)
+    {
+        return base64_encode($pass);
+    }
+
+    private static function decrypt($str)
+    {
+        return base64_decode($str);
     }
 
     /**
@@ -64,7 +74,7 @@ class User extends AbstractModel
      */
     public function getPassword()
     {
-        return $this->password;
+        return static::decrypt($this->password);
     }
 
     /**
