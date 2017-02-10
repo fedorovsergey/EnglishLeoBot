@@ -27,7 +27,9 @@ class User extends AbstractModel
         $query = Db::getPdo()->prepare("SELECT * FROM {$table} WHERE id = :id");
         $query->execute(['id'=>$id]);
         $raw = $query->fetch(PDO::FETCH_ASSOC);
-
+        if (empty($row)) {
+            return null;
+        }
         $user = new self;
         $user->assign($raw);
         return $user;
@@ -61,10 +63,12 @@ class User extends AbstractModel
         $table = static::TABLE;
         $query = Db::getPdo()->prepare("SELECT * FROM {$table} WHERE chat_id = :chatId");
         $query->execute(['chatId'=>$chatId]);
-        $raw = $query->fetch(PDO::FETCH_ASSOC);
-
+        $row = $query->fetch(PDO::FETCH_ASSOC);
+        if (empty($row)) {
+            return null;
+        }
         $user = new self;
-        $user->assign($raw);
+        $user->assign($row);
         return $user;
     }
 

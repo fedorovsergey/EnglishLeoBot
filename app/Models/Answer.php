@@ -61,6 +61,9 @@ class Answer extends AbstractModel
         $query->execute(['questionId' => $questionId, 'text' => $text]);
 
         $row = $query->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT);
+        if (empty($row)) {
+            return null;
+        }
         $answer = new self;
         $answer->assign($row);
         return $answer;
@@ -81,6 +84,9 @@ class Answer extends AbstractModel
         $query->execute(['id' => $id]);
 
         $row = $query->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT);
+        if (empty($row)) {
+            return null;
+        }
         $answer = new self;
         $answer->assign($row);
         return $answer;
