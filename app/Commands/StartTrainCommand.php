@@ -3,6 +3,7 @@
 namespace Longman\TelegramBot\Commands\UserCommands;
 
 use Longman\TelegramBot\Commands\UserCommand;
+use Longman\TelegramBot\Entities\Keyboard;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\TelegramLog;
 use Models\User;
@@ -37,10 +38,16 @@ class StartTrainCommand extends UserCommand
     {
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
-
-        TelegramLog::debug('Lingualeo startTrain command start');
         $user = User::getByChatId($chat_id);
-        TelegramLog::debug('Lingualeo user '.$user->getLogin());
+
+        if(null === $user) {
+            $data = [
+                'chat_id'      => $chat_id,
+                'text'         => "Вы не вводили свой логин/пароль от Lingualeo!\nЯ не могу загрузить ваши вопросы\nВведите свои учетные данные командой /login",
+                'reply_markup' => Keyboard::remove(),
+            ];
+            return Request::sendMessage($data);
+        }
 
         try {
             $question = $user->getNextQuestion();
@@ -50,6 +57,7 @@ class StartTrainCommand extends UserCommand
                 [
                     'chat_id' => $chat_id,
                     'text' => 'При выполнении возникла ошибка: ' .$e->getMessage(),
+                    'reply_markup' => Keyboard::remove(),
                 ]
             );
         }
@@ -58,6 +66,7 @@ class StartTrainCommand extends UserCommand
             $data = [
                 'chat_id' => $chat_id,
                 'text'    => 'Internal Server Error',
+                'reply_markup' => Keyboard::remove(),
             ];
             return Request::sendMessage($data);
         }
