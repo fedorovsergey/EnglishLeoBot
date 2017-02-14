@@ -78,7 +78,7 @@ class DB
         $options = [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $encoding];
         try {
             $pdo = new PDO($dsn, $credentials['user'], $credentials['password'], $options);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         } catch (PDOException $e) {
             throw new TelegramException($e->getMessage());
         }
