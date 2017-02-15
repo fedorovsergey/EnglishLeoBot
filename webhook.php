@@ -8,11 +8,10 @@ spl_autoload_register(function ($class_name) {
     include CLASS_ROOT.str_replace('\\', DIRECTORY_SEPARATOR, $class_name) . '.php';
 });
 
-$API_KEY = '306141394:AAGbmIBKOFxkFFGb9mTT11iNWKZCVOHPahM';
-$BOT_NAME = 'EnglishLeobot';
 try {
     // Create Telegram API object
-    $telegram = new Longman\TelegramBot\Telegram($API_KEY, $BOT_NAME);
+    $telegramCredentials = require CLASS_ROOT . 'config/telegram.php';
+    $telegram = new Longman\TelegramBot\Telegram($telegramCredentials['api_key'], $telegramCredentials['bot_name']);
     
     //Включаем логирование 
     Longman\TelegramBot\TelegramLog::initialize();
