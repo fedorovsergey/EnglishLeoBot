@@ -24,7 +24,7 @@ try {
     $telegram->addCommandsPath($commands_folder);
 
     //включаем базу данных
-    \Database\DB::initialize(require CLASS_ROOT . 'config/database.php');
+    \Database\Db::initialize(require CLASS_ROOT . 'config/database.php');
 
     // Handle telegram webhook request
     $telegram->handle();
