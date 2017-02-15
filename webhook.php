@@ -25,8 +25,7 @@ try {
     $telegram->addCommandsPath($commands_folder);
 
     //включаем базу данных
-    $telegram->enableMySQL(require CLASS_ROOT . 'config/database.php');
-    \Longman\TelegramBot\DB::getPdo()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    \Database\DB::initialize(require CLASS_ROOT . 'config/database.php');
 
     // Handle telegram webhook request
     $telegram->handle();

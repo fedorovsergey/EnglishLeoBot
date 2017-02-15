@@ -5,7 +5,7 @@ namespace Models;
 
 use Lingualeo\Exception;
 use Lingualeo\Handler;
-use Longman\TelegramBot\DB;
+use Database\Db;
 use PDO;
 
 class Training extends AbstractModel

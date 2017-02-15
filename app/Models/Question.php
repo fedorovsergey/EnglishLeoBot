@@ -3,7 +3,7 @@
 namespace Models;
 
 
-use Longman\TelegramBot\DB;
+use Database\Db;
 use Longman\TelegramBot\Entities\Keyboard;
 use PDO;
 

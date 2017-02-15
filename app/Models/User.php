@@ -3,7 +3,7 @@
 namespace Models;
 
 
-use Longman\TelegramBot\DB;
+use Database\Db;
 use PDO;
 
 class User extends AbstractModel
