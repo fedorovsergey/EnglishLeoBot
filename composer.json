@@ -1,9 +1,9 @@
 {
-    "name": "yourproject/yourproject",
-        "type": "project",
-	    "require": {
-	            "php": ">=5.5.0",
-		            "longman/telegram-bot": "*"
-			        }
-				}
+  "name": "fedorovsergey/EnglishLeoBot",
+  "type": "project",
+  "require": {
+    "php": ">=5.5.0",
+    "longman/telegram-bot": ">=0.39.0"
+  }
+}
 
